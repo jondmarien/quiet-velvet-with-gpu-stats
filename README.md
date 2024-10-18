@@ -160,7 +160,7 @@ function App() {
             ...
             {<Settings widgetObj={[
                 { name: 'XWidget', changeState: setShowXWidget },
-                { name: 'YWidget Search', changeState: setShowYWidget }
+                { name: 'YWidget', changeState: setShowYWidget }
             ]}/>}
             ...
         </>
