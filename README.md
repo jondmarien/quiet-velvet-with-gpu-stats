@@ -24,7 +24,7 @@ Enter the repository and install the dependencies.
 - ```cd ./quiet-velvet/```
 - ``npm install``
 
-- Create a `config.js` file in the `./src/` folder. You can configure it later with the [configuration](#Configuration ⚙️) section.
+- Create a `config.js` file in the `./src/` folder. You can configure it later with the [configuration](#configuration-%EF%B8%8F) section.
 
 Then build the project with this command.
 - ```npm run build```
