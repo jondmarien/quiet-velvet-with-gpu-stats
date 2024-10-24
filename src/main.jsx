@@ -103,9 +103,9 @@ function App() {
                     <Shortcut commandRunner={output.glazewm.runCommand}
                               commands={[
                                   'focus --workspace 3',
-                                  `shell-exec ${config.explorerPath} https://chatgpt.com/`
+                                  `shell-exec ${config.arcBrowserPath}`
                               ]}
-                              iconClass="nf-md-hexagon" name="ChatGPT"
+                              iconClass="nf-md-web" name="Arc Browser"
                     />
                     <Shortcut commandRunner={output.glazewm.runCommand}
                               commands={[
