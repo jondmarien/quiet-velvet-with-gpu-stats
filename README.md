@@ -24,6 +24,8 @@ Enter the repository and install the dependencies.
 - ```cd ./quiet-velvet/```
 - ``npm install``
 
+- Create a `config.js` file in the `./src/` folder. You can configure it later with the [configuration](#configuration-%EF%B8%8F) section.
+
 Then build the project with this command.
 - ```npm run build```
 
@@ -40,6 +42,7 @@ You should see quiet-velvet/main in Widget configs !
 
 You need to create a `config.js` file in the directory `quiet-velvet/src/`.
 Enter the following key/values in the file. 
+The key are not needed for the build so you can let them like the example.
 
 I will explain how to get all the Spotify tokens in the section [Spotify](#spotify).
 
@@ -160,7 +163,7 @@ function App() {
             ...
             {<Settings widgetObj={[
                 { name: 'XWidget', changeState: setShowXWidget },
-                { name: 'YWidget Search', changeState: setShowYWidget }
+                { name: 'YWidget', changeState: setShowYWidget }
             ]}/>}
             ...
         </>
