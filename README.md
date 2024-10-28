@@ -100,6 +100,8 @@ Currently, Quiet Velvet includes four widgets.
 >
 > **On click**, it will open the Spotify app.
 
+> **Note:** You need a Spotify Premium account to be able to skip, pause, and play songs using this widget.
+
 To use this widget, follow these steps:
 1. Go to your [Spotify developer dashboard](https://developer.spotify.com/dashboard).
 2. Create an app with any name and description, and add this URI in the Redirect URIs section: https://alecchen.dev/spotify-refresh-token. Choose the `Web API` option.
