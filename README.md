@@ -57,6 +57,8 @@ export default {
 
 ## Customization 💅
 
+> **Note:** Every time you want to apply your changes, you need to run `npm run build` at the root of the config folder then reload zebar.
+
 You can customize the style by modifying the following values in the `styles.css` file:
 - Main color: `--main-color`
 - Font color: `--font-color`
