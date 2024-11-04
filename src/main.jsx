@@ -22,11 +22,13 @@ const providers = zebar.createProviderGroup({
 createRoot(document.getElementById('root')).render(<App/>);
 
 function App() {
+    const defaultDateFormat = 'h:mm a';
+    const onHoverDateFormat = 'ddd DD MMM h:mm a';
     const [output, setOutput] = useState(providers.outputMap);
     const [showSpotifyWidget, setShowSpotifyWidget] = useState(true);
     const [showGoogleSearch, setShowGoogleSearch] = useState(true);
     const [showShortcuts, setShowShortcuts] = useState(true);
-    const [dateFormat, setDateFormat] = useState('HH:mm');
+    const [dateFormat, setDateFormat] = useState(defaultDateFormat);
 
     useEffect(() => {
         providers.onOutput(() => setOutput(providers.outputMap));
@@ -122,9 +124,9 @@ function App() {
                     {showSpotifyWidget ? <SpotifyWidget/> : null}
                     <i className="nf nf-md-calendar_month"></i>
                     <button className="clean-button" onMouseEnter={() => {
-                        setDateFormat('ddd DD MMM HH:mm')
+                        setDateFormat(onHoverDateFormat)
                     }} onMouseLeave={() => {
-                        setDateFormat('HH:mm')
+                        setDateFormat(defaultDateFormat)
                     }}>
                         {moment(output.date?.now).format(dateFormat)}
                     </button>
