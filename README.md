@@ -12,6 +12,8 @@ If you need assistance, please send me a message on Discord. My ID is `0h37`.
 
 ![demo-quiet-velvet](https://raw.githubusercontent.com/LeoBessin/files/refs/heads/master/zebar/my_custom_zebar.gif)
 
+> **IMPORTANT:** This project will only work with this Zebar version and above : **2.6.1**
+
 </div>
 
 ## Installation 📂
