@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import * as zebar from 'zebar';
-import SpotifyWidget from "./components/SpotifyWidget.jsx";
+import MediaWidget from "./components/MediaWidget.jsx";
 import GoogleSearch from "./components/GoogleSearch.jsx";
 import Settings from "./components/Settings.jsx";
 import Shortcut from "./components/Shortcut";
@@ -16,7 +16,9 @@ const providers = zebar.createProviderGroup({
     battery: { type: 'battery' },
     memory: { type: 'memory' },
     weather: { type: 'weather' },
-    host: { type: 'host' }
+    host: { type: 'host' },
+    media: { type: 'media' },
+    audio: { type: 'audio' },
 });
 
 createRoot(document.getElementById('root')).render(<App/>);
@@ -25,7 +27,7 @@ function App() {
     const defaultDateFormat = 'h:mm a';
     const onHoverDateFormat = 'ddd DD MMM h:mm a';
     const [output, setOutput] = useState(providers.outputMap);
-    const [showSpotifyWidget, setShowSpotifyWidget] = useState(true);
+    const [showMediaWidget, setShowMediaWidget] = useState(true);
     const [showGoogleSearch, setShowGoogleSearch] = useState(true);
     const [showShortcuts, setShowShortcuts] = useState(true);
     const [dateFormat, setDateFormat] = useState(defaultDateFormat);
@@ -121,7 +123,9 @@ function App() {
 
             <div className="center">
                 <div className="box">
-                    {showSpotifyWidget ? <SpotifyWidget/> : null}
+                    {showMediaWidget && output.media && output.audio ? <MediaWidget
+                        mediaProvider={output.media}
+                        audioProvider={output.audio}/> : null}
                     <i className="nf nf-md-calendar_month"></i>
                     <button className="clean-button" onMouseEnter={() => {
                         setDateFormat(onHoverDateFormat)
@@ -157,7 +161,7 @@ function App() {
                         </>
                     )}
                     {<Settings widgetObj={[
-                        { name: 'Spotify', changeState: setShowSpotifyWidget },
+                        { name: 'Media', changeState: setShowMediaWidget },
                         { name: 'Google Search', changeState: setShowGoogleSearch },
                         { name: 'Shortcuts', changeState: setShowShortcuts }
                     ]}/>}

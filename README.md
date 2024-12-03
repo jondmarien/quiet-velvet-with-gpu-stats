@@ -47,9 +47,6 @@ Instructions for obtaining the Spotify tokens are provided in the [Spotify](#spo
 
 ```js
 export default {
-    spotifyClientId: '<YOUR-SPOTIFY-CLIENT-ID>',
-    spotifyClientSecret: '<YOUR-SPOTIFY-CLIENT-SECRET>',
-    spotifyRefreshToken: '<YOUR-SPOTIFY-REFRESH-TOKEN>',
     explorerPath: '<YOUR-EXPLORER-PATH>',
     powershellPath: '<YOUR-POWERSHELL-PATH>'
 }
@@ -88,30 +85,23 @@ and click the `Icon` text to copy it to your clipboard. Then, replace `[xxx-logo
 ## Widgets 📦
 
 Currently, Quiet Velvet includes four widgets.
-- [Spotify](#spotify)
+- [Media](#media)
 - [Google Search](#google-search)
 - [Shortcut](#shortcut)
 - [Settings](#settings)
 
-### Spotify
+### Media
 ![quiet-velvet-spotify](https://raw.githubusercontent.com/LeoBessin/files/refs/heads/master/zebar/spotify_zebar.png)
 
-> This widget displays your currently playing Spotify song.
+> This widget displays your currently playing media.
 >
 > **On hover**, you will have access to previous, play/pause, and skip song controls.
 >
-> **On click**, it will open the Spotify app.
+> **On Wheel up/down**, it will change your audio volume.
 
-> **Note:** You need a Spotify Premium account to be able to skip, pause, and play songs using this widget.
+There are some issues when using the bar play/pause button; it may not always display the correct state. 
+Additionally, the volume control might feel a bit laggy.
 
-To use this widget, follow these steps:
-1. Go to your [Spotify developer dashboard](https://developer.spotify.com/dashboard).
-2. Create an app with any name and description, and add this URI in the Redirect URIs section: https://alecchen.dev/spotify-refresh-token. Choose the `Web API` option.
-3. Open your new app settings and fill in the `spotifyClientId` and `spotifyClientSecret` values in the `src/config.js` file.
-4. Go to https://alecchen.dev/spotify-refresh-token/, enter your client ID and client secret, and select the following options: `user-read-currently-playing`, `user-modify-playback-state`, and `streaming`.
-5. Click submit and fill in the `spotifyRefreshToken` value in the `src/config.js` file.
-
-The widget will automatically generate a Spotify access token, store it in local storage, and generate a new one if the previous one expires.
 
 ### Google Search
 ![quiet-velvet-google-search](https://raw.githubusercontent.com/LeoBessin/files/refs/heads/master/zebar/google_search_zebar.png)

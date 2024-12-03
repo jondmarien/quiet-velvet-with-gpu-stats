@@ -1,35 +1,37 @@
-import * as spotifyUtils from '../utils.js'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createRef } from 'react';
+import {throttle} from "./utils";
 
-const SpotifyWidget = () => {
+const MediaWidget = ({ mediaProvider, audioProvider }) => {
     const [song, setSong] = useState('fetching...');
     const [showSettings, setShowSettings] = useState(false);
+    const widgetRef = createRef();
 
     const maxSongLength = window.innerWidth > 1600 ? 30 : 10;
 
     async function updateSong() {
-        const tempSong = await spotifyUtils.getCurrentSong()
+        console.log(mediaProvider)
+        const tempSong = mediaProvider?.currentSession?.isPlaying ? mediaProvider.currentSession.title : "...";
         setSong(tempSong)
     }
 
-    let intervalId = [];
     useEffect(() => {
-        const updateAndSetInterval = async () => {
-            await updateSong();
-            const tempId = setInterval(async () => {
-                await updateSong();
-            }, 1000 * 10);
-            intervalId.push(tempId);
-        };
+        updateSong();
+        console.log(audioProvider)
+    }, [mediaProvider]);
 
-        updateAndSetInterval();
+    useEffect(() => {
+       const handleMouseWheel = throttle(async (evt) => {
+        const volume = await getVolume();
+        evt.deltaY > 0 ? audioProvider.setVolume(volume - 5) : audioProvider.setVolume(volume + 5);
+    }, 1000);
+
+        widgetRef?.current?.removeEventListener('mousewheel', handleMouseWheel);
+        widgetRef?.current?.addEventListener('mousewheel', handleMouseWheel);
 
         return () => {
-            for (const id of intervalId) {
-                clearInterval(id);
-            }
+            widgetRef?.current?.removeEventListener('mousewheel', handleMouseWheel);
         };
-    }, []);
+    }, [audioProvider]);
 
     const style = {
         textDecoration: 'none', color: 'var(--font-color)',
@@ -44,26 +46,43 @@ const SpotifyWidget = () => {
         display: 'flex', justifyContent: 'center', alignItems: 'center',
         color: 'var(--font-color)', borderRadius: '50%',
     }
+
+    async function previousSong() {
+        mediaProvider.previous();
+    }
+
+    async function playPause() {
+        mediaProvider.togglePlayPause();
+    }
+
+    async function skipSong() {
+        mediaProvider.next();
+    }
+
+    async function getVolume() {
+        return audioProvider.defaultPlaybackDevice.volume;
+    }
+
     return (
-        <button className="clean-button" onMouseEnter={() => setShowSettings(true)}
+        <button ref={widgetRef} className="clean-button" onMouseEnter={() => setShowSettings(true)}
                 onMouseLeave={() => setShowSettings(false)}
                 style={style}>
-            <a className="logo" href="spotify:home" target="_blank" style={style}>
-                <i className="nf nf-fa-spotify"></i>
+            <div className="logo" style={style}>
+                <i className="nf nf-md-music"></i>
                 {song.length > maxSongLength ? song.substring(0, maxSongLength) + '...' : song}
-            </a>
+            </div>
             {showSettings && !['fetching...', 'Error', ''].includes(song) ?
                 <div style={settingsStyle}>
                     <button className="nf nf-md-skip_previous clean-button" style={iconStyle} onClick={async () => {
-                        await spotifyUtils.previousSong();
+                        await previousSong();
                         setTimeout(async () => await updateSong(), 1000);
                     }}></button>
                     <button className="nf nf-md-play_pause clean-button" style={iconStyle} onClick={async () => {
-                        await spotifyUtils.playPause();
+                        await playPause();
                         setTimeout(async () => await updateSong(), 1000);
                     }}></button>
                     <button className="nf nf-md-skip_next clean-button" style={iconStyle} onClick={async () => {
-                        await spotifyUtils.skipSong();
+                        await skipSong();
                         setTimeout(async () => await updateSong(), 1000);
                     }}></button>
                 </div>
@@ -72,4 +91,4 @@ const SpotifyWidget = () => {
     );
 }
 
-export default SpotifyWidget;
+export default MediaWidget;
