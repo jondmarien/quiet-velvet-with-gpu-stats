@@ -13,12 +13,13 @@ const providers = zebar.createProviderGroup({
     glazewm: { type: 'glazewm' },
     cpu: { type: 'cpu' },
     date: { type: 'date', formatting: 'EEE d MMM t' },
-    battery: { type: 'battery' },
+    // battery: { type: 'battery' }, // Removed battery provider
     memory: { type: 'memory' },
     weather: { type: 'weather' },
     host: { type: 'host' },
     media: { type: 'media' },
     audio: { type: 'audio' },
+
 });
 
 createRoot(document.getElementById('root')).render(<App/>);
@@ -31,6 +32,25 @@ function App() {
     const [showGoogleSearch, setShowGoogleSearch] = useState(true);
     const [showShortcuts, setShowShortcuts] = useState(true);
     const [dateFormat, setDateFormat] = useState(defaultDateFormat);
+    
+    // --- Restore original SSE logic for GPU stats ---
+    const [gpu, setGpu] = useState(null);
+    useEffect(() => {
+        const source = new window.EventSource('https://gpustats.chron0.tech/gpu/stream');
+        source.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                setGpu(data);
+            } catch (e) {
+                // Ignore malformed data
+            }
+        };
+        source.onerror = (err) => {
+            console.error('SSE connection error:', err);
+            source.close();
+        };
+        return () => source.close();
+    }, []);
 
     useEffect(() => {
         providers.onOutput(() => setOutput(providers.outputMap));
@@ -107,16 +127,16 @@ function App() {
                     <Shortcut commandRunner={output.glazewm.runCommand}
                               commands={[
                                   'focus --workspace 3',
-                                  `shell-exec ${config.arcBrowserPath}`
+                                  `shell-exec ${config.zenBrowserPath}`
                               ]}
-                              iconClass="nf-md-web" name="Arc Browser"
+                              iconClass="nf-md-web" name="Zen Browser"
                     />
                     <Shortcut commandRunner={output.glazewm.runCommand}
                               commands={[
                                   'focus --workspace 2',
-                                  `shell-exec ${config.powershellPath}`
+                                  `shell-exec ${config.warpPath}`
                               ]}
-                              iconClass="nf-cod-terminal_powershell" name="Powershell"
+                              iconClass="nf-cod-terminal_powershell" name="Warp"
                     />
                 </div> : null}
             </div>
@@ -197,15 +217,25 @@ function App() {
                         </button>
                     )}
 
-                    {output.battery && (
-                        <div className="battery">
-                            {/* Show icon for whether battery is charging. */}
-                            {output.battery.isCharging && (
-                                <i className="nf nf-md-power_plug charging-icon"></i>
-                            )}
-                            {getBatteryIcon(output.battery)}
-                            {Math.round(output.battery.chargePercent)}%
-                        </div>
+                    {/* GPU component replaces battery */}
+                    {/* {output.gpu && (
+                        <button className="gpu clean-button" onClick={
+                            () => output.glazewm.runCommand('shell-exec taskmgr')
+                        }>
+                            <i className="nf nf-seti-git"></i>
+                            GPU: {output.gpu.utilizationGpu !== undefined ? Math.round(output.gpu.utilizationGpu) + '%' : '--'} |
+                            Mem: {output.gpu.memoryUsed !== undefined && output.gpu.memoryTotal !== undefined ? Math.round((output.gpu.memoryUsed / output.gpu.memoryTotal) * 100) + '%' : '--'}
+                        </button>
+                    )} */}
+                    
+                    {gpu && (
+                        <button className="gpu clean-button" onClick={
+                            () => output.glazewm.runCommand('shell-exec taskmgr')
+                        }>
+                            <i className="nf nf-seti-git"></i>
+                            GPU: {gpu.utilizationGpu !== undefined ? Math.round(gpu.utilizationGpu) + '%' : '--'} |
+                            Mem: {gpu.memoryUsed !== undefined && gpu.memoryTotal !== undefined ? Math.round((gpu.memoryUsed / gpu.memoryTotal) * 100) + '%' : '--'}
+                        </button>
                     )}
 
                     {output.weather && (
