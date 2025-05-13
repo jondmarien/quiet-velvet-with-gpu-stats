@@ -1,5 +1,5 @@
 {
-  "name": "quiet-velvet",
+  "name": "quiet-velvet-with-gpu-stats",
   "version": "1.0.0",
   "scripts": {
     "dev": "vite build --watch",
